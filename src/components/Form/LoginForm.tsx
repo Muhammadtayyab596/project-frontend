@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, useForm } from "react-hook-form";
 
-import { Box } from "@mui/material";
+import { Box, Alert } from "@mui/material";
 
 import SubmitButton from "../../components/Button/SubmitButton";
 import InputField from "../../components/InputField/InputField";
@@ -53,7 +53,7 @@ const LoginForm: React.FC = () => {
   };
   return (
     <FormProvider {...methods}>
-      {error && <p>{error}</p>}
+      {error && <Alert>{error}</Alert>}
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box sx={{ my: 0.5 }}>
           <InputField label="Email" name="email" control={control} />
@@ -70,6 +70,7 @@ const LoginForm: React.FC = () => {
           <SubmitButton
             label="Create Account"
             type="submit"
+            sx={{ width: "100%", py: 1.5, borderRadius: "20px" }}
             // loading={loading}
           />
         </Box>

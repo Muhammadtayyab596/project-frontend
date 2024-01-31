@@ -7,6 +7,8 @@ type SubmitButtonProps = {
   type: "submit" | "reset" | "button";
   disabled?: boolean;
   loading?: boolean;
+  sx?: any;
+  onClick?: () => void;
 };
 
 const SubmitButton: React.FC<SubmitButtonProps> = ({
@@ -14,13 +16,16 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
   type,
   disabled,
   loading,
+  sx,
+  onClick,
 }) => {
   return (
     <Button
-      sx={{ width: "100%", py: 1.5, borderRadius: "20px" }}
+      sx={sx}
       variant="contained"
       type={type}
       disabled={disabled}
+      onClick={onClick}
     >
       {loading ? <Loader color="#fff" width="20px" height="20px" /> : label}
     </Button>

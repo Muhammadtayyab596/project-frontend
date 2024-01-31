@@ -12,14 +12,9 @@ type LoginData = {
 };
 
 export const login = async (data: LoginData) => {
-  console.log(data);
   return axios.post("/user/login", data);
 };
 
 export const register = async (data: RegisterData) => {
   return axios.post("/user/signup", data);
-};
-
-export const getAllprojects = async () => {
-  return axios.get("/project/all");
 };
