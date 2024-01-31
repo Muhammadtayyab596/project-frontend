@@ -27,5 +27,6 @@ const styles = {
     boxShadow: "0px 12px 24px #919EAB1F",
     borderRadius: "20px",
     background: "#fff",
+    mb:6
   },
 };

@@ -7,15 +7,18 @@ import useProjectForm from "./useProjectForm";
 type PropsTypes = {
   setOpenIsEditModal?: (value: boolean) => void;
   defaultData?: any;
+  handleSuccess?: () => void;
 };
 
 const ProjectForm: React.FC<PropsTypes> = ({
   setOpenIsEditModal,
   defaultData,
+  handleSuccess,
 }): JSX.Element => {
   const { methods, onSubmit, handleRedirect, loading } = useProjectForm(
     defaultData,
-    setOpenIsEditModal
+    setOpenIsEditModal,
+    handleSuccess
   );
   const { handleSubmit, control } = methods;
   return (
@@ -80,12 +83,14 @@ const ProjectForm: React.FC<PropsTypes> = ({
                 type="button"
                 sx={{ py: 1, borderRadius: "20px", background: "red" }}
                 onClick={handleRedirect}
+                disabled={loading}
               />
               <SubmitButton
-                label="Create"
+                label={defaultData ? "Update" : "Create"}
                 type="submit"
                 sx={{ py: 1, borderRadius: "20px" }}
                 loading={loading}
+                disabled={loading}
               />
             </Box>
           </Grid>

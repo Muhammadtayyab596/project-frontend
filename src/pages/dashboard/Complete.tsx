@@ -25,6 +25,7 @@ const CompleteProject: React.FC = (): JSX.Element => {
   const [projectsComplete, setProjectsComplete] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<any>();
+  const [isSuccess, setIsuccess] = useState<boolean>(false);
 
   const fetchProjects = async () => {
     try {
@@ -51,7 +52,8 @@ const CompleteProject: React.FC = (): JSX.Element => {
 
   useEffect(() => {
     fetchProjects();
-  }, [searchValue]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchValue, isSuccess]);
 
   const handleSearchChange = debounce((e) => {
     setSearchValue(e);
@@ -74,7 +76,7 @@ const CompleteProject: React.FC = (): JSX.Element => {
             </Box>
           )}
 
-          {!projectsComplete?.leneght && (
+          {projectsComplete?.length === 0 && (
             <Box sx={styles.style}>
               <NotFound text="No Complete Project Found" />
             </Box>
@@ -83,7 +85,7 @@ const CompleteProject: React.FC = (): JSX.Element => {
           {projectsComplete?.map((item: any) => (
             <Grid lg={4} key={item._id}>
               <Box sx={{ mt: 4 }}>
-                <ProjectCard projectsDeatils={item} />
+                <ProjectCard projectsDeatils={item} setIsuccess={setIsuccess} />
               </Box>
             </Grid>
           ))}

@@ -11,6 +11,7 @@ interface Props {
   message: string;
   handleClose: () => void;
   handleAction?: () => void;
+  loading?: boolean;
 }
 
 const ConfirmationModal = ({
@@ -19,6 +20,7 @@ const ConfirmationModal = ({
   message,
   handleClose,
   handleAction,
+  loading,
 }: Readonly<Props>) => {
   return (
     <div>
@@ -42,12 +44,15 @@ const ConfirmationModal = ({
               type="button"
               sx={styles.btnStyleYes}
               onClick={handleAction}
+              loading={loading}
+              disabled={loading}
             />
             <SubmitButton
               label="Cancel"
               type="button"
               sx={styles.btnStyle}
               onClick={handleClose}
+              disabled={loading}
             />
           </Box>
         </Box>

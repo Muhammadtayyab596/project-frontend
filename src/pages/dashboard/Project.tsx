@@ -25,6 +25,7 @@ const Project = () => {
   const [projectsDeatils, setProjectsDeatils] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<any>();
+  const [isSuccess, setIsuccess] = useState<boolean>(false);
 
   const fetchProjects = async () => {
     const obj: any = {
@@ -47,7 +48,7 @@ const Project = () => {
 
   useEffect(() => {
     fetchProjects();
-  }, [searchValue]);
+  }, [searchValue, isSuccess]);
 
   const handleSearchChange = debounce((e) => {
     setSearchValue(e);
@@ -84,7 +85,7 @@ const Project = () => {
           {projectsDeatils?.map((item: any) => (
             <Grid lg={4} key={item._id}>
               <Box sx={{ mt: 4 }}>
-                <ProjectCard projectsDeatils={item} />
+                <ProjectCard projectsDeatils={item} setIsuccess={setIsuccess} />
               </Box>
             </Grid>
           ))}

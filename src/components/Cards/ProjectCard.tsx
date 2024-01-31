@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Edit } from "@mui/icons-material";
 import ArchiveIcon from "@mui/icons-material/Archive";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
@@ -14,14 +15,22 @@ import { blue } from "@mui/material/colors";
 import { dateFormatter } from "../../utils/dateFormatter";
 import ConfirmationModal from "../Modal/ConfirmationModal";
 import EditModal from "../Modal/EditModal";
+import {
+  completeProject,
+  archiveProject,
+} from "../../services/projectServices";
 
 type CardTypes = {
   projectsDeatils: any;
+  setIsuccess?: any;
 };
 
-const ProjectCard: React.FC<CardTypes> = ({ projectsDeatils }) => {
+const ProjectCard: React.FC<CardTypes> = ({ projectsDeatils, setIsuccess }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [openIsComplete, setOpenIsComplete] = useState<boolean>(false);
   const [openIsArchive, setOpenIsArchive] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [openIsEditModal, setOpenIsEditModal] = useState<boolean>(false);
   const [defaultData, setDefaultData] = useState<any>();
 
@@ -50,12 +59,43 @@ const ProjectCard: React.FC<CardTypes> = ({ projectsDeatils }) => {
     setDefaultData(projectsDeatils);
   };
 
-  const handleComplete = () => {
-    console.log("complete");
+  const handleComplete = async () => {
+    try {
+      setLoading(true);
+      const obj = {
+        isCompleted: true,
+        id: projectsDeatils?._id,
+      };
+      const response = await completeProject(obj);
+      if (response?.data?.statusCode === 200) {
+        navigate("/complete");
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleArchive = () => {
-    console.log("Archive");
+  const handleArchive = async () => {
+    try {
+      const obj = {
+        isArchived: true,
+        id: projectsDeatils?._id,
+      };
+      const response = await archiveProject(obj);
+      if (response?.data?.statusCode === 200) {
+        navigate("/archive");
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSuccess = () => {
+    setIsuccess(true);
   };
 
   return (
@@ -73,7 +113,7 @@ const ProjectCard: React.FC<CardTypes> = ({ projectsDeatils }) => {
         <CardMedia
           component="img"
           height="194"
-          image="https://mui.com/static/images/cards/paella.jpg"
+          image={projectsDeatils?.image}
           alt="Paella dish"
         />
         <CardContent sx={styles.CardContent}>
@@ -104,16 +144,21 @@ const ProjectCard: React.FC<CardTypes> = ({ projectsDeatils }) => {
           <IconButton
             sx={styles.iconStyle}
             aria-label="edit"
-            onClick={handleOpenEditModal}
+            onClick={() => handleOpenEditModal(projectsDeatils)}
           >
             <Edit />
           </IconButton>
-          <IconButton aria-label="share" onClick={handleOpen}>
-            <CheckCircleOutlineIcon sx={styles.iconStyle} />
-          </IconButton>
-          <IconButton aria-label="share" onClick={handleIsArchiveOpen}>
-            <ArchiveIcon sx={styles.iconStyle} />
-          </IconButton>
+
+          {location.pathname === "/" && (
+            <>
+              <IconButton aria-label="share" onClick={handleOpen}>
+                <CheckCircleOutlineIcon sx={styles.iconStyle} />
+              </IconButton>
+              <IconButton aria-label="share" onClick={handleIsArchiveOpen}>
+                <ArchiveIcon sx={styles.iconStyle} />
+              </IconButton>
+            </>
+          )}
         </CardActions>
       </Card>
 
@@ -123,6 +168,7 @@ const ProjectCard: React.FC<CardTypes> = ({ projectsDeatils }) => {
         heading="Complete Project"
         message="Are you sure you want to complete this project?"
         handleAction={handleComplete}
+        loading={loading}
       />
 
       <ConfirmationModal
@@ -131,6 +177,7 @@ const ProjectCard: React.FC<CardTypes> = ({ projectsDeatils }) => {
         heading="Archive Project"
         message="Are you sure you want to Archive this project?"
         handleAction={handleArchive}
+        loading={loading}
       />
 
       <EditModal
@@ -138,6 +185,7 @@ const ProjectCard: React.FC<CardTypes> = ({ projectsDeatils }) => {
         handleClose={editclose}
         setOpenIsEditModal={setOpenIsEditModal}
         defaultData={defaultData}
+        handleSuccess={handleSuccess}
       />
     </>
   );

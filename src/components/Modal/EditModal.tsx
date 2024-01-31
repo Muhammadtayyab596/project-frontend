@@ -9,6 +9,7 @@ interface Props {
   handleClose: () => void;
   setOpenIsEditModal: (value: boolean) => void;
   defaultData: any;
+  handleSuccess?: () => void;
 }
 
 const EditModal = ({
@@ -16,6 +17,7 @@ const EditModal = ({
   handleClose,
   setOpenIsEditModal,
   defaultData,
+  handleSuccess,
 }: Props) => {
   return (
     <div>
@@ -33,6 +35,7 @@ const EditModal = ({
             <ProjectForm
               setOpenIsEditModal={setOpenIsEditModal}
               defaultData={defaultData}
+              handleSuccess={handleSuccess}
             />
           </Box>
         </Box>

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { createProject } from "../../services/projectServices";
+import { createProject, updateProject } from "../../services/projectServices";
 import * as yup from "yup";
 
 type SchemaTypes = {
@@ -14,10 +14,10 @@ type SchemaTypes = {
   liveUrl: string;
 };
 
-type Props = {
-  defaultData?: any;
-  setOpenIsEditModal?: any;
-};
+// type Props = {
+//   defaultData?: any;
+//   setOpenIsEditModal?: any;
+// };
 
 const schema = yup.object().shape({
   name: yup.string().required("Name is required"),
@@ -34,7 +34,11 @@ const schema = yup.object().shape({
     .url("Invalid URL format, please enter a valid URL"),
 });
 
-const useProjectForm = (defaultData: any, setOpenIsEditModal: any) => {
+const useProjectForm = (
+  defaultData: any,
+  setOpenIsEditModal: any,
+  handleSuccess: any
+) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -53,17 +57,37 @@ const useProjectForm = (defaultData: any, setOpenIsEditModal: any) => {
   const { reset } = methods;
 
   const onSubmit = (data: SchemaTypes) => {
-    console.log(data);
     apiCallFUntion(data);
-    setOpenIsEditModal(false);
   };
 
   const apiCallFUntion = async (data: SchemaTypes) => {
+    if (defaultData?._id) {
+      const obj: any = {
+        ...data,
+        id: defaultData?._id,
+      };
+      try {
+        setLoading(true);
+        const response = await updateProject(obj);
+        if (response?.data?.statusCode === 200) {
+          setOpenIsEditModal(false);
+          handleSuccess();
+        }
+      } catch (er) {
+        console.log(er, "error");
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+
     try {
       setLoading(true);
       const response = await createProject(data);
-      console.log(response, "create-response");
-      reset();
+      if (response?.data?.statusCode === 201) {
+        handleRedirect();
+        reset();
+      }
     } catch (er) {
       console.log(er, "error");
     } finally {
@@ -72,7 +96,11 @@ const useProjectForm = (defaultData: any, setOpenIsEditModal: any) => {
   };
 
   const handleRedirect = () => {
-    navigate(-1);
+    if (defaultData?._id) {
+      setOpenIsEditModal(false);
+    } else {
+      navigate(-1);
+    }
   };
   return {
     methods,

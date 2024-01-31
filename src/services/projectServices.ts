@@ -29,10 +29,14 @@ export const createProject = async (data: DataTypes) => {
   return axios.post("/project/create", data);
 };
 
-export const completeProject = async (id: number) => {
-  return axios.put(`/complete/${id}`);
+export const completeProject = async (obj: any) => {
+  return axios.put(`/project/complete/${obj?.id}`, obj);
 };
 
-export const updateProject = async (id: number) => {
-  return axios.put(`/update/${id}`);
+export const archiveProject = async (obj: any) => {
+  return axios.put(`/project/archive/${obj?.id}`, obj);
+};
+
+export const updateProject = async (obj: any) => {
+  return axios.put(`/project/update/${obj?.id}`, obj);
 };
