@@ -19,20 +19,28 @@ import {
   completeProject,
   archiveProject,
 } from "../../services/projectServices";
+import { ProjectDetails, ProjectDefaultValues } from "../../types";
 
 type CardTypes = {
-  projectsDeatils: any;
-  setIsuccess?: any;
+  projectsDeatils: ProjectDetails;
+  setIsSuccess: (value: boolean) => void;
+  isSuccess: boolean;
 };
 
-const ProjectCard: React.FC<CardTypes> = ({ projectsDeatils, setIsuccess }) => {
+const ProjectCard: React.FC<CardTypes> = ({
+  projectsDeatils,
+  setIsSuccess,
+  isSuccess,
+}) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [openIsComplete, setOpenIsComplete] = useState<boolean>(false);
   const [openIsArchive, setOpenIsArchive] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [openIsEditModal, setOpenIsEditModal] = useState<boolean>(false);
-  const [defaultData, setDefaultData] = useState<any>();
+  const [defaultData, setDefaultData] = useState<
+    ProjectDefaultValues | undefined
+  >();
 
   const handleClose = () => {
     setOpenIsComplete(false);
@@ -54,9 +62,13 @@ const ProjectCard: React.FC<CardTypes> = ({ projectsDeatils, setIsuccess }) => {
     setOpenIsEditModal(false);
   };
 
-  const handleOpenEditModal = (projectsDeatils: any) => {
+  const handleOpenEditModal = (projectsDeatils: ProjectDefaultValues) => {
     setOpenIsEditModal(true);
     setDefaultData(projectsDeatils);
+  };
+
+  const handleSuccess = () => {
+    setIsSuccess(!isSuccess);
   };
 
   const handleComplete = async () => {
@@ -68,7 +80,7 @@ const ProjectCard: React.FC<CardTypes> = ({ projectsDeatils, setIsuccess }) => {
       };
       const response = await completeProject(obj);
       if (response?.data?.statusCode === 200) {
-        navigate("/complete");
+        navigate("/dashboard/project/complete");
       }
     } catch (error) {
       console.log(error);
@@ -85,17 +97,13 @@ const ProjectCard: React.FC<CardTypes> = ({ projectsDeatils, setIsuccess }) => {
       };
       const response = await archiveProject(obj);
       if (response?.data?.statusCode === 200) {
-        navigate("/archive");
+        navigate("/dashboard/project/archive");
       }
     } catch (error) {
       console.log(error);
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleSuccess = () => {
-    setIsuccess(true);
   };
 
   return (
@@ -149,7 +157,7 @@ const ProjectCard: React.FC<CardTypes> = ({ projectsDeatils, setIsuccess }) => {
             <Edit />
           </IconButton>
 
-          {location.pathname === "/" && (
+          {location.pathname === "/dashboard/project/all" && (
             <>
               <IconButton aria-label="share" onClick={handleOpen}>
                 <CheckCircleOutlineIcon sx={styles.iconStyle} />

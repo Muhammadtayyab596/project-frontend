@@ -14,11 +14,6 @@ type SchemaTypes = {
   liveUrl: string;
 };
 
-// type Props = {
-//   defaultData?: any;
-//   setOpenIsEditModal?: any;
-// };
-
 const schema = yup.object().shape({
   name: yup.string().required("Name is required"),
   description: yup.string().required("Description is required"),
@@ -62,7 +57,7 @@ const useProjectForm = (
 
   const apiCallFUntion = async (data: SchemaTypes) => {
     if (defaultData?._id) {
-      const obj: any = {
+      const obj = {
         ...data,
         id: defaultData?._id,
       };
@@ -85,7 +80,7 @@ const useProjectForm = (
       setLoading(true);
       const response = await createProject(data);
       if (response?.data?.statusCode === 201) {
-        handleRedirect();
+        navigate("/dashboard/project/all");
         reset();
       }
     } catch (er) {

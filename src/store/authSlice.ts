@@ -1,11 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { login } from "../services/authServices";
 
-type User = {
-  id: string;
-  name: string;
-};
-
 type InitialStateProps = {
   isAuthenticate: boolean;
   user: any;
@@ -28,7 +23,15 @@ const initialState: InitialStateProps = {
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    logoutUser: (state) => {
+      localStorage.removeItem("ACCESS_TOKEN");
+      state.user = null;
+      state.isAuthenticate = false;
+      state.loading = false;
+      state.error = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(loginUser.pending, (state) => {
@@ -45,11 +48,12 @@ const authSlice = createSlice({
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.isAuthenticate = false;
-        console.log("action: ", action);
         state.error = action.error.message;
       });
   },
 });
+
+export const { logoutUser } = authSlice.actions;
 
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
@@ -61,8 +65,6 @@ export const loginUser = createAsyncThunk(
       }
       return response;
     } catch (error: any) {
-      console.log("error slice: ", error);
-
       throw new Error(error?.response?.data?.message ?? "Something went wrong");
     }
   }

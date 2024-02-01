@@ -44,7 +44,7 @@ const LoginForm: React.FC = () => {
     // @ts-ignore
     if (respons?.payload?.data?.token) {
       reset();
-      navigate("/");
+      navigate("/dashboard/project/all");
     }
   };
 
@@ -53,7 +53,11 @@ const LoginForm: React.FC = () => {
   };
   return (
     <FormProvider {...methods}>
-      {error && <Alert>{error}</Alert>}
+      {error && (
+        <Alert sx={{ my: 1 }} severity="error">
+          {error}
+        </Alert>
+      )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box sx={{ my: 0.5 }}>
           <InputField label="Email" name="email" control={control} />
@@ -71,7 +75,7 @@ const LoginForm: React.FC = () => {
             label="Create Account"
             type="submit"
             sx={{ width: "100%", py: 1.5, borderRadius: "20px" }}
-            // loading={loading}
+            loading={loading}
           />
         </Box>
       </form>

@@ -1,6 +1,6 @@
 import { Box, Container, Grid } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import CustomBreadcrumbs from "../../components/Breadcrumbs";
 import ProjectCard from "../../components/Cards/ProjectCard";
 import TopHeader from "../../components/Header/TopHeader";
@@ -8,6 +8,7 @@ import CustomAppBar from "../../components/Header/index";
 import Loader from "../../components/Loader";
 import { getAllprojects } from "../../services/projectServices";
 import { debounce } from "../../utils/debounce";
+import { ProjectDetails } from "../../types";
 import NotFound from "../../components/NotFound";
 
 const styles = {
@@ -20,23 +21,23 @@ const styles = {
   },
 };
 
-const Project = () => {
+const Project: React.FC = (): JSX.Element => {
   const navigate = useNavigate();
-  const [projectsDeatils, setProjectsDeatils] = useState<any>([]);
+  const [projectsDeatils, setProjectsDeatils] = useState<ProjectDetails[]>();
   const [loading, setLoading] = useState<boolean>(false);
-  const [searchValue, setSearchValue] = useState<any>();
-  const [isSuccess, setIsuccess] = useState<boolean>(false);
+  const [searchValue, setSearchValue] = useState<string>();
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
   const fetchProjects = async () => {
-    const obj: any = {
-      searchValue: searchValue ? searchValue : "",
+    const obj: {
+      searchValue: string;
+    } = {
+      searchValue: searchValue ?? "",
     };
     try {
       setLoading(true);
       const response = await getAllprojects(obj);
-      // @ts-ignore
       if (response?.data?.statusCode === 200) {
-        // @ts-ignore
         setProjectsDeatils(response?.data?.data?.projects);
       }
     } catch (error) {
@@ -55,7 +56,7 @@ const Project = () => {
   }, 2000);
 
   const handleRedirect = () => {
-    navigate("/add-project");
+    navigate("/dashboard/project/add");
   };
 
   return (
@@ -64,7 +65,7 @@ const Project = () => {
       <Container sx={{ mt: 5 }}>
         <CustomBreadcrumbs />
         <TopHeader
-          label="All projects"
+          label="All Projects"
           onHandleChange={handleSearchChange}
           handleRedirect={handleRedirect}
         />
@@ -76,16 +77,20 @@ const Project = () => {
             </Box>
           )}
 
-          {projectsDeatils?.leneght === 0 && (
+          {projectsDeatils?.length === 0 && !loading && (
             <Box sx={styles.style}>
               <NotFound text="No Project Found" />
             </Box>
           )}
 
-          {projectsDeatils?.map((item: any) => (
+          {projectsDeatils?.map((item: ProjectDetails) => (
             <Grid lg={4} key={item._id}>
               <Box sx={{ mt: 4 }}>
-                <ProjectCard projectsDeatils={item} setIsuccess={setIsuccess} />
+                <ProjectCard
+                  projectsDeatils={item}
+                  setIsSuccess={setIsSuccess}
+                  isSuccess={isSuccess}
+                />
               </Box>
             </Grid>
           ))}

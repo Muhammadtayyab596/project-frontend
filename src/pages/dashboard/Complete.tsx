@@ -9,6 +9,7 @@ import Loader from "../../components/Loader";
 import { getAllCompleteProjects } from "../../services/projectServices";
 import { debounce } from "../../utils/debounce";
 import NotFound from "../../components/NotFound";
+import { ProjectDetails } from "../../types";
 
 const styles = {
   style: {
@@ -22,21 +23,21 @@ const styles = {
 
 const CompleteProject: React.FC = (): JSX.Element => {
   const navigate = useNavigate();
-  const [projectsComplete, setProjectsComplete] = useState<any>([]);
+  const [projectsComplete, setProjectsComplete] = useState<ProjectDetails[]>();
   const [loading, setLoading] = useState<boolean>(false);
-  const [searchValue, setSearchValue] = useState<any>();
-  const [isSuccess, setIsuccess] = useState<boolean>(false);
+  const [searchValue, setSearchValue] = useState<string>();
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
   const fetchProjects = async () => {
     try {
-      const obj: any = {
+      const obj: {
+        searchValue: string;
+      } = {
         searchValue: searchValue ?? "",
       };
       setLoading(true);
       const response = await getAllCompleteProjects(obj);
-      // @ts-ignore
       if (response?.data?.statusCode === 200) {
-        // @ts-ignore
         setProjectsComplete(response?.data?.data?.projects);
       }
     } catch (error) {
@@ -47,7 +48,7 @@ const CompleteProject: React.FC = (): JSX.Element => {
   };
 
   const handleRedirect = () => {
-    navigate("/add-project");
+    navigate("/dashboard/project/add");
   };
 
   useEffect(() => {
@@ -76,7 +77,7 @@ const CompleteProject: React.FC = (): JSX.Element => {
             </Box>
           )}
 
-          {projectsComplete?.length === 0 && (
+          {projectsComplete?.length === 0 && !loading && (
             <Box sx={styles.style}>
               <NotFound text="No Complete Project Found" />
             </Box>
@@ -85,7 +86,11 @@ const CompleteProject: React.FC = (): JSX.Element => {
           {projectsComplete?.map((item: any) => (
             <Grid lg={4} key={item._id}>
               <Box sx={{ mt: 4 }}>
-                <ProjectCard projectsDeatils={item} setIsuccess={setIsuccess} />
+                <ProjectCard
+                  projectsDeatils={item}
+                  setIsSuccess={setIsSuccess}
+                  isSuccess={isSuccess}
+                />
               </Box>
             </Grid>
           ))}

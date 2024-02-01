@@ -6,14 +6,26 @@ const CustomBreadcrumbs = () => {
   return (
     <div role="presentation">
       <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 3 }}>
-        <Link color="text.primary" to="/" style={styles.style}>
+        <Link
+          color="text.primary"
+          to="/dashboard/project/all"
+          style={styles.style}
+        >
           All
         </Link>
-        <Link to="/complete" color="text.primary" style={styles.style}>
+        <Link
+          to="/dashboard/project/complete"
+          color="text.primary"
+          style={styles.style}
+        >
           Complete
         </Link>
 
-        <Link to="/archive" color="text.primary" style={styles.style}>
+        <Link
+          to="/dashboard/project/archive"
+          color="text.primary"
+          style={styles.style}
+        >
           Archive
         </Link>
       </Breadcrumbs>

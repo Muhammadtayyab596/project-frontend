@@ -11,6 +11,13 @@ type DataTypes = {
   techstack: string;
   githubRepoLink: string;
   liveUrl: string;
+  id?: string;
+};
+
+type isUpdateProps = {
+  isArchived?: boolean;
+  isCompleted?: boolean;
+  id?: string;
 };
 
 export const getAllprojects = async (data: ArgTypes) => {
@@ -29,14 +36,14 @@ export const createProject = async (data: DataTypes) => {
   return axios.post("/project/create", data);
 };
 
-export const completeProject = async (obj: any) => {
+export const completeProject = async (obj: isUpdateProps) => {
   return axios.put(`/project/complete/${obj?.id}`, obj);
 };
 
-export const archiveProject = async (obj: any) => {
+export const archiveProject = async (obj: isUpdateProps) => {
   return axios.put(`/project/archive/${obj?.id}`, obj);
 };
 
-export const updateProject = async (obj: any) => {
+export const updateProject = async (obj: DataTypes) => {
   return axios.put(`/project/update/${obj?.id}`, obj);
 };

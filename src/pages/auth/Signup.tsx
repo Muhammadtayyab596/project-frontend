@@ -23,7 +23,7 @@ const Signup = () => {
 
         <Box component="form" sx={{ mt: 2.5 }}>
           <Box sx={{ textAlign: "center", mt: 1 }}>
-            <Link to="/login" style={{ color: "#2065D1", fontSize: 15 }}>
+            <Link to="/auth/login" style={{ color: "#2065D1", fontSize: 15 }}>
               Already have an account? Login
             </Link>
           </Box>

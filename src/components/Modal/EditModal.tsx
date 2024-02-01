@@ -3,12 +3,13 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import ProjectForm from "../Form/ProjectForm";
+import { ProjectDefaultValues } from "../../types";
 
 interface Props {
   open: boolean;
   handleClose: () => void;
   setOpenIsEditModal: (value: boolean) => void;
-  defaultData: any;
+  defaultData: ProjectDefaultValues | undefined;
   handleSuccess?: () => void;
 }
 

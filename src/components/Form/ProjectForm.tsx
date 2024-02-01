@@ -3,10 +3,11 @@ import { Box, Grid } from "@mui/material";
 import SubmitButton from "../../components/Button/SubmitButton";
 import InputField from "../../components/InputField/InputField";
 import useProjectForm from "./useProjectForm";
+import { ProjectDefaultValues } from "../../types";
 
 type PropsTypes = {
   setOpenIsEditModal?: (value: boolean) => void;
-  defaultData?: any;
+  defaultData?: ProjectDefaultValues | undefined;
   handleSuccess?: () => void;
 };
 
@@ -27,13 +28,13 @@ const ProjectForm: React.FC<PropsTypes> = ({
         <Grid container>
           <Grid item lg={6}>
             <Box sx={{ p: 1.5 }}>
-              <InputField label="Name" name="name" control={control} />
+              <InputField label="Project Name" name="name" control={control} />
             </Box>
           </Grid>
           <Grid item lg={6}>
             <Box sx={{ p: 1.5 }}>
               <InputField
-                label="Description"
+                label="Project Description"
                 name="description"
                 control={control}
               />

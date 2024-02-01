@@ -34,7 +34,7 @@ const SignupForm: React.FC = () => {
     },
   });
 
-  const { handleSubmit, control, reset } = methods;
+  const { handleSubmit, control, reset, setError } = methods;
 
   const registerApiCall = async (data: schemaTypes) => {
     setIsLoading(true);
@@ -44,8 +44,11 @@ const SignupForm: React.FC = () => {
         reset();
         navigate("/login");
       }
-    } catch (error) {
-      console.log(error, "error");
+    } catch (error: any) {
+      setError("email", {
+        type: "manual",
+        message: error?.response?.data?.message,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -76,6 +79,7 @@ const SignupForm: React.FC = () => {
           <SubmitButton
             label="Create Account"
             type="submit"
+            sx={{ width: "100%", py: 1.5, borderRadius: "20px" }}
             loading={isLoading}
           />
         </Box>
